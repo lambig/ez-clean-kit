@@ -1,4 +1,4 @@
-import { F_Supplier } from "../Functions";
+import { F_Supplier, F_Function } from "../Functions";
 
 export abstract class DomainObject<D extends DomainObject<D>> {
     /**
@@ -29,6 +29,11 @@ export abstract class DomainObject<D extends DomainObject<D>> {
     check(constraint: Constraint<D>): PartialApplication<D> {
         return new PartialApplication<D>(constraint);
     }
+    /**
+     * @tutorial just return "this.constructor.name" in every single implementation!
+     * @returns className of the specific DomainObject
+     */
+    abstract className(): string;
 }
 
 /**
@@ -45,11 +50,11 @@ export class DomainValidation<E extends DomainObject<E>> {
     /**
      * @returns description of violation or null
      */
-    violation(): DomainConstraintViolation | null {
-        return this.constraint() ? null : this.violationDescriptor();
+    violationOf(target: DomainObject<any>): DomainConstraintViolation | null {
+        return this.constraint() ? null : this.violationDescriptor().withClassNameOf(target);
     }
 
-    
+
 }
 
 type Constraint<D extends DomainObject<D>> = F_Supplier<boolean>;
@@ -72,9 +77,17 @@ class PartialApplication<D extends DomainObject<D>> {
 /**
  * Interface for expressing domain constraint violations
  */
-export interface DomainConstraintViolation {
+export abstract class DomainConstraintViolation {
+    private domainObjectClassName: string = "";
+    withClassNameOf(domainObject: DomainObject<any>): DomainConstraintViolation {
+        this.domainObjectClassName = domainObject.className();
+        return this;
+    }
+    abstract description(): string;
     /**
      * @returns the stringfied content
      */
-    stringified(): String;
+    stringified(): string {
+        return `${this.domainObjectClassName}: ${this.description()}`
+    }
 }

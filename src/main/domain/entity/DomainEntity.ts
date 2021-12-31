@@ -13,7 +13,7 @@ export abstract class DomainEntity<E extends DomainEntity<E>> extends DomainObje
             .flat()
             .concat(
                 this.validations()
-                    .map(validation => validation.violation())
+                    .map(validation => validation.violationOf(this))
                     .filter(notNull));
     }
     equalTo(that: DomainObject<any>): boolean {
@@ -25,4 +25,4 @@ export abstract class DomainEntity<E extends DomainEntity<E>> extends DomainObje
 const areSameType = (_this: DomainEntity<any>, that: DomainObject<any>): boolean => that instanceof DomainEntity && _this.constructor === that.constructor;
 const haveSameId = (_this: DomainEntity<any>, that: DomainEntity<any>): boolean => _this.id().equalTo(that.id());
 
-export type DomainEntityProperty = DomainPrimitive<any, any> | ValueObject<any> | DomainObjects<ValueObject<any> | DomainPrimitive<any, any>>;
+export type DomainEntityProperty = DomainPrimitive<any, any> | ValueObject<any> | DomainObjects<ValueObject<any> | DomainPrimitive<any, any>, any>;

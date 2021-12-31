@@ -14,7 +14,7 @@ export abstract class Aggregate<A extends Aggregate<A>> extends DomainObject<A> 
             .flat()
             .concat(
                 this.validations()
-                    .map(validation => validation.violation())
+                    .map(validation => validation.violationOf(this))
                     .filter(notNull));
     }
     equalTo(that: DomainObject<any>): boolean {
@@ -33,4 +33,5 @@ export type AggregateProperty =
         ValueObject<any> |
         DomainPrimitive<any, any> |
         DomainEntity<any> |
-        Aggregate<any>>;
+        Aggregate<any>,
+        any>;

@@ -1,34 +1,28 @@
 import { DomainConstraintViolation, DomainObject, DomainValidation } from "./DomainObject";
 import { DomainPrimitive } from "./value/DomainPrimitive";
 
-export class Id<E> extends DomainPrimitive<Id<E>, string> {
+export abstract class Id<E> extends DomainPrimitive<Id<E>, string> {
     validations(): DomainValidation<Id<E>>[] {
         return [
             this.check(() => !!this.value()).orElse(() => new NoIdSpecified("id is not specified!"))
         ];
     }
-    private constructor(id: string) {
+    protected constructor(id: string) {
         super();
         this.id = id;
     }
     private readonly id!: string;
-
-    static of<X>(id: string): Id<X> {
-        return new Id<X>(id);
-    }
     value(): string {
         return this.id;
     }
-    deepCopy(): Id<E> {
-        return new Id<E>(this.id);
-    }
 }
 
-class NoIdSpecified implements DomainConstraintViolation {
+class NoIdSpecified extends DomainConstraintViolation {
     constructor(message: string) {
+        super();
         this.message = message;
     }
-    stringified(): String {
+    description(): string {
         return this.message;
     }
     private readonly message;

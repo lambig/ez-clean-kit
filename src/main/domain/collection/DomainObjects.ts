@@ -1,11 +1,7 @@
 import { DomainConstraintViolation, DomainObject, DomainValidation } from "../DomainObject";
 
-export class DomainObjects<D extends DomainObject<D>> extends DomainObject<DomainObjects<D>>{
-    private readonly elements: D[];
-
-    static of<E extends DomainObject<E>>(elements: E[]): DomainObjects<E> {
-        return new DomainObjects<E>(elements);
-    }
+export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainObjects<D, C>> extends DomainObject<C>{
+    protected readonly elements: D[];
 
     constructor(elements: D[]) {
         super();
@@ -14,13 +10,20 @@ export class DomainObjects<D extends DomainObject<D>> extends DomainObject<Domai
 
 
     equalTo(that: DomainObject<any>): boolean {
-        const haveExactSameElements = (that: DomainObjects<any>) => (element: DomainObject<any>, index: number) => element.equalTo((that as DomainObjects<any>).elements[index]);
-        return areSameType(this, that) && this.elements.every(haveExactSameElements(that as DomainObjects<any>));
+        const haveExactSameElements = (that: DomainObjects<any, any>) => (element: DomainObject<any>, index: number) => element.equalTo((that as DomainObjects<any, any>).elements[index]);
+        return areSameType(this, that) && this.elements.every(haveExactSameElements(that as DomainObjects<any, any>));
     }
-    deepCopy(): DomainObjects<D> {
-        return new DomainObjects<D>(this.elements.map(element => element.deepCopy()));
+
+    /**
+     * @tutorial just return "return new ImplementationClass(this.deepCopies())"
+     */
+    abstract deepCopy(): C;
+
+    deepCopies(): D[]{
+        return this.elements.map(element => element.deepCopy());       
     }
-    validations(): DomainValidation<DomainObjects<D>>[] {
+
+    validations(): DomainValidation<DomainObjects<D, C>>[] {
         return [];
     }
     violations(): DomainConstraintViolation[] {
@@ -28,4 +31,4 @@ export class DomainObjects<D extends DomainObject<D>> extends DomainObject<Domai
     }
 
 }
-const areSameType = (_this: DomainObjects<any>, that: DomainObject<any>): boolean => that instanceof DomainObjects && _this.constructor === that.constructor;
+const areSameType = (_this: DomainObjects<any, any>, that: DomainObject<any>): boolean => that instanceof DomainObjects && _this.constructor === that.constructor;

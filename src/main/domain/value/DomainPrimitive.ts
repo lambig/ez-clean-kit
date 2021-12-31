@@ -5,7 +5,7 @@ export abstract class DomainPrimitive<P extends DomainPrimitive<P, V>, V extends
     violations(): DomainConstraintViolation[] {
         return this
             .validations()
-            .map(validation => validation.violation())
+            .map(validation => validation.violationOf(this))
             .filter(notNull);
     }
     equalTo(that: DomainObject<any>): boolean {
