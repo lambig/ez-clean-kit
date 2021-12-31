@@ -15,6 +15,10 @@ export abstract class Id<E> extends DomainPrimitive<Id<E>, string> {
     value(): string {
         return this.id;
     }
+    /**
+     * @tutorial just return "new IdImplementation(this.value)"
+     */
+    abstract deepCopy(): Id<E>;
 }
 
 class NoIdSpecified extends DomainConstraintViolation {

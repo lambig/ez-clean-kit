@@ -82,7 +82,8 @@ class StockedBook extends DomainEntity<StockedBook>{
     }
     validations(): DomainValidation<StockedBook>[] {
         return [
-            this.check(() => this.stock.notEmpty()).orElse(() => new StringViolationMessage("you've got to have at least 1 stock to register a stocked book"))
+            this.check(() => this.stock.notEmpty())
+                .orElse("you've got to have at least 1 stock to register a stocked book")
         ]
     }
     deepCopy(): StockedBook {
@@ -134,12 +135,16 @@ class Stock<D extends DomainObject<D>> extends DomainPrimitive<Stock<D>, number>
     }
     validations(): DomainValidation<Stock<D>>[] {
         return [
-            this.check(() => this.stock > -1).orElse(() => new StringViolationMessage("stock can't be a negative value"))
+            this
+                .check(() => this.stock > -1)
+                .orElse("stock can't be a negative value")
         ];
     }
+    
     value(): number {
         return this.stock;
     }
+
     deepCopy(): Stock<D> {
         return new Stock<D>(this.stock);
     }
@@ -174,14 +179,18 @@ test("unreal", () => {
         BookId.of("abcde"),
         Stock.of(-1));
 
-    expect(unreal.violations().map(e => e.stringified())).toStrictEqual(["stock can't be a negative value", "you've got to have at least 1 stock to register a stocked book"]);
+    expect(unreal.violations().map(e => e.stringified()))
+        .toStrictEqual([
+            "Stock: stock can't be a negative value",
+            "StockedBook: you've got to have at least 1 stock to register a stocked book"]);
 });
 test("nostock", () => {
     const nostock = StockedBook.of(
         BookId.of("abcde"),
         Stock.of(0));
 
-    expect(nostock.violations().map(e => e.stringified())).toStrictEqual(["you've got to have at least 1 stock to register a stocked book"]);
+    expect(nostock.violations().map(e => e.stringified()))
+        .toStrictEqual(["StockedBook: you've got to have at least 1 stock to register a stocked book"]);
 });
 test("nostock", () => {
     const books =
@@ -197,7 +206,12 @@ test("nostock", () => {
                 Stock.of(4))
         ]);
 
-    expect(books.violations().map(e => e.stringified())).toStrictEqual(["you've got to have at least 1 stock to register a stocked book"]);
+    expect(books.violations().map(e => e.stringified()))
+        .toStrictEqual([
+            "Stock: stock can't be a negative value",
+            "StockedBook: you've got to have at least 1 stock to register a stocked book",
+            "BookId: id is not specified!"
+        ]);
 });
 test("nostock", () => {
     const shelf =
@@ -215,5 +229,10 @@ test("nostock", () => {
                     Stock.of(4))
             ]
         );
-    expect(shelf.violations().map(e => e.stringified())).toStrictEqual(["you've got to have at least 1 stock to register a stocked book"]);
+    expect(shelf.violations().map(e => e.stringified()))
+        .toStrictEqual([
+            "Stock: stock can't be a negative value",
+            "StockedBook: you've got to have at least 1 stock to register a stocked book",
+            "BookId: id is not specified!"
+        ]);
 });

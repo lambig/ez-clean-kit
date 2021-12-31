@@ -53,9 +53,8 @@ export class DomainValidation<E extends DomainObject<E>> {
     violationOf(target: DomainObject<any>): DomainConstraintViolation | null {
         return this.constraint() ? null : this.violationDescriptor().withClassNameOf(target);
     }
-
-
 }
+
 
 type Constraint<D extends DomainObject<D>> = F_Supplier<boolean>;
 type ViolationDescriptor<D extends DomainObject<D>> = F_Supplier<DomainConstraintViolation>;
@@ -65,13 +64,19 @@ class PartialApplication<D extends DomainObject<D>> {
         this.constraint = constraint;
     }
     private readonly constraint: Constraint<D>;
+    orElse(violationDescriptor: ViolationDescriptor<D>): DomainValidation<D>;
+    orElse(description: string): DomainValidation<D>;
     /**
      * complete a validation from the previously given constraint and violation descriptor given here
      * @param violationDescriptor 
      * @returns validation
      */
-    orElse(violationDescriptor: ViolationDescriptor<D>): DomainValidation<D> {
-        return new DomainValidation<D>(this.constraint, violationDescriptor);
+    orElse(violationDescriptor: ViolationDescriptor<D> | string): DomainValidation<D> {
+        return new DomainValidation<D>(
+            this.constraint,
+            typeof violationDescriptor === "string"
+                ? () => new StringViolationMessage(violationDescriptor)
+                : violationDescriptor);
     }
 }
 /**
@@ -89,5 +94,16 @@ export abstract class DomainConstraintViolation {
      */
     stringified(): string {
         return `${this.domainObjectClassName}: ${this.description()}`
+    }
+}
+
+class StringViolationMessage extends DomainConstraintViolation {
+    constructor(message: string) {
+        super();
+        this.message = message;
+    }
+    private readonly message;
+    description(): string {
+        return this.message;
     }
 }
