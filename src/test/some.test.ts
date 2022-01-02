@@ -48,7 +48,7 @@ class BookShelf extends Aggregate<BookShelf>{
     id(): Id<BookShelf> {
         return this._id;
     }
-    values(): (AggregateProperty)[] {
+    values(): AggregateProperty[] {
         return [this._id, this.books];
     }
     deepCopy(): BookShelf {
@@ -96,6 +96,9 @@ class StockedBook extends DomainEntity<StockedBook>{
     }
 }
 class StockedBooks extends DomainObjects<StockedBook, StockedBooks>{
+    validations(): DomainValidation<StockedBooks>[] {
+        return [];
+    }
     static of(elements: StockedBook[]): StockedBooks {
         return new StockedBooks(elements);
     }
@@ -140,7 +143,7 @@ class Stock<D extends DomainObject<D>> extends DomainPrimitive<Stock<D>, number>
                 .orElse("stock can't be a negative value")
         ];
     }
-    
+
     value(): number {
         return this.stock;
     }

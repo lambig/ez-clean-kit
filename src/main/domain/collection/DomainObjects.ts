@@ -1,3 +1,4 @@
+import { notNull } from "../../Functions";
 import { DomainConstraintViolation, DomainObject, DomainValidation } from "../DomainObject";
 
 export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainObjects<D, C>> extends DomainObject<C>{
@@ -19,15 +20,19 @@ export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainO
      */
     abstract deepCopy(): C;
 
-    deepCopies(): D[]{
-        return this.elements.map(element => element.deepCopy());       
+    deepCopies(): D[] {
+        return this.elements.map(element => element.deepCopy());
     }
 
-    validations(): DomainValidation<DomainObjects<D, C>>[] {
-        return [];
-    }
     violations(): DomainConstraintViolation[] {
-        return this.elements.map(element => element.violations()).flat();
+        return this.elements
+            .map(element => element.violations())
+            .flat()
+            .concat(
+                this
+                    .validations()
+                    .map(element => element.violationOf(this))
+                    .filter(notNull));
     }
 
 }
