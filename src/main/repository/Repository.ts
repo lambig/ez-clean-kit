@@ -4,7 +4,7 @@ import { DomainEntity } from "../domain/entity/DomainEntity";
 import { Id } from "../domain/Id";
 
 
-export interface Repository<E extends EntityOrAggregate | DomainObjects<EntityOrAggregate>> {
+export interface Repository<E extends EntityOrAggregate | DomainObjects<EntityOrAggregate, any>> {
     findById(id: Id<E>): Promise<E>;
     save(entityOrAggregate: E): Promise<SaveResult<E>>;
     update(entityOrAggregate: E): Promise<UpdateResult<E>>;

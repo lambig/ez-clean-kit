@@ -1,5 +1,5 @@
 import { notNull } from "toolbox-ts";
-import { DomainConstraintViolation, DomainObject, DomainValidation } from "../DomainObject";
+import { DomainConstraintViolation, DomainObject } from "../DomainObject";
 
 export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainObjects<D, C>> extends DomainObject<C>{
     protected readonly elements: D[];
