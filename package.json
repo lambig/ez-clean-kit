@@ -6,7 +6,10 @@
   "scripts": {
     "watch": "tsc-watch",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "build": "npm-run-all -s build:cjs build:esm",
+    "build:cjs": "tsc --project . --module commonjs --outDir ./dist-cjs",
+    "build:esm": "tsc --project . --module es2015 --outDir ./dist-esm"
   },
   "repository": {
     "type": "git",
@@ -19,16 +22,17 @@
   },
   "homepage": "https://github.com/lambig/ez-clean-kit#readme",
   "devDependencies": {
-    "@types/jest": "^27.0.3",
-    "@types/node": "^16.11.11",
-    "jest": "^27.4.3",
-    "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.7",
-    "ts-node": "^10.4.0",
-    "ts-node-dev": "^1.1.8",
-    "tsc-watch": "^4.5.0",
-    "typescript": "^4.5.2"
+    "@types/jest": "27.0.3",
+    "@types/node": "16.11.11",
+    "jest": "27.4.3",
+    "npm-run-all": "4.1.5",
+    "rimraf": "3.0.2",
+    "toolbox-ts": "0.2.0",
+    "ts-jest": "27.0.7",
+    "ts-node": "10.4.0",
+    "ts-node-dev": "1.1.8",
+    "tsc-watch": "4.5.0",
+    "typescript": "4.5.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -45,6 +49,9 @@
     },
     "testMatch": [
       "**/test/**/*.test.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/test/example/"
     ]
   }
 }
