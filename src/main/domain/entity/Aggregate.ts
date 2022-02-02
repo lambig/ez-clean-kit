@@ -1,4 +1,4 @@
-import { notNull } from "../../Functions";
+import { notNull } from "toolbox-ts";
 import { DomainConstraintViolation, DomainObject } from "../DomainObject";
 import { DomainPrimitive } from "../value/DomainPrimitive";
 import { DomainEntity } from "./DomainEntity";
@@ -23,7 +23,7 @@ export abstract class Aggregate<A extends Aggregate<A>> extends DomainObject<A> 
     abstract id(): Id<A>;
     abstract values(): AggregateProperty[];
 }
-const areSameType = (_this: Aggregate<any>, that: DomainObject<any>): boolean => that instanceof Aggregate && _this.constructor === that.constructor;
+const areSameType = (_this: Aggregate<any>, that: DomainObject<any>): boolean => that instanceof Aggregate && _this.className() === that.className();
 export type AggregateProperty =
     DomainPrimitive<any, any> |
     ValueObject<any> |

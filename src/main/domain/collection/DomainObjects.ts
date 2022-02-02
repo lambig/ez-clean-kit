@@ -1,4 +1,4 @@
-import { notNull } from "../../Functions";
+import { notNull } from "toolbox-ts";
 import { DomainConstraintViolation, DomainObject, DomainValidation } from "../DomainObject";
 
 export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainObjects<D, C>> extends DomainObject<C>{
@@ -36,4 +36,4 @@ export abstract class DomainObjects<D extends DomainObject<D>, C extends DomainO
     }
 
 }
-const areSameType = (_this: DomainObjects<any, any>, that: DomainObject<any>): boolean => that instanceof DomainObjects && _this.constructor === that.constructor;
+const areSameType = (_this: DomainObjects<any, any>, that: DomainObject<any>): boolean => that instanceof DomainObjects && _this.className() === that.className();

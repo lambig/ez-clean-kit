@@ -1,0 +1,19 @@
+import { Id } from "../../main/domain/Id";
+import { SaveResult, UpdateResult, DeleteResult } from "../../main/repository/Repository";
+import { BookShelf } from "./BookShelf";
+import { BookShelfRepository } from "./BookShelfRepository";
+
+export class BookShelfRepositoryImpl implements BookShelfRepository {
+    findById(id: Id<BookShelf>): Promise<BookShelf> {
+        throw new Error("Method not implemented.");
+    }
+    save(entityOrAggregate: BookShelf): Promise<SaveResult<BookShelf>> {
+        throw new Error("Method not implemented.");
+    }
+    update(entityOrAggregate: BookShelf): Promise<UpdateResult<BookShelf>> {
+        throw new Error("Method not implemented.");
+    }
+    delete(entityOrAggregate: BookShelf): Promise<DeleteResult<BookShelf>> {
+        throw new Error("Method not implemented.");
+    }
+}

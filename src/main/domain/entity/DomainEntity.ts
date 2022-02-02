@@ -1,4 +1,4 @@
-import { notNull } from "../../Functions";
+import { notNull } from "toolbox-ts";
 import { DomainConstraintViolation, DomainObject } from "../DomainObject";
 import { DomainPrimitive } from "../value/DomainPrimitive";
 import { HasIdentifier, Id } from "../Id";
@@ -22,7 +22,7 @@ export abstract class DomainEntity<E extends DomainEntity<E>> extends DomainObje
     abstract id(): Id<E>;
     abstract values(): DomainEntityProperty[]
 }
-const areSameType = (_this: DomainEntity<any>, that: DomainObject<any>): boolean => that instanceof DomainEntity && _this.constructor === that.constructor;
+const areSameType = (_this: DomainEntity<any>, that: DomainObject<any>): boolean => that instanceof DomainEntity && _this.className() === that.className();
 const haveSameId = (_this: DomainEntity<any>, that: DomainEntity<any>): boolean => _this.id().equalTo(that.id());
 
 export type DomainEntityProperty = DomainPrimitive<any, any> | ValueObject<any> | DomainObjects<ValueObject<any> | DomainPrimitive<any, any>, any>;

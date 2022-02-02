@@ -1,5 +1,3 @@
-import { F_Supplier, F_Function } from "../Functions";
-
 export abstract class DomainObject<D extends DomainObject<D>> {
     /**
      * @returns object's equivalency with the target
@@ -56,10 +54,10 @@ export class DomainValidation<E extends DomainObject<E>> {
 }
 
 
-type Constraint<D extends DomainObject<D>> = F_Supplier<boolean>;
-type ViolationDescriptor<D extends DomainObject<D>> = F_Supplier<DomainConstraintViolation>;
+type Constraint<D extends DomainObject<D>> = () => boolean;
+type ViolationDescriptor<D extends DomainObject<D>> = () => DomainConstraintViolation;
 
-class PartialApplication<D extends DomainObject<D>> {
+export class PartialApplication<D extends DomainObject<D>> {
     constructor(constraint: Constraint<D>) {
         this.constraint = constraint;
     }

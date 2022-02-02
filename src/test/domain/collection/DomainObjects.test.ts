@@ -1,52 +1,7 @@
-import { DomainObjects } from "../../../main/domain/collection/DomainObjects";
-import { DomainValidation } from "../../../main/domain/DomainObject";
-import { DomainPrimitive } from "../../../main/domain/value/DomainPrimitive";
+import { AnotherStocks } from "../../example/AnotherStocks";
+import { Stock } from "../../example/Stock";
+import { Stocks } from "../../example/Stocks";
 
-class Stock extends DomainPrimitive<Stock, number> {
-    private readonly _value: number;
-    constructor(value: number) {
-        super();
-        this._value = value;
-    }
-    static of(value: number): Stock {
-        return new Stock(value);
-    }
-    value(): number {
-        return this._value;
-    }
-    deepCopy(): Stock {
-        return new Stock(this._value);
-    }
-    validations(): DomainValidation<Stock>[] {
-        return [
-            this
-                .check(() => this._value > -1)
-                .orElse("stock can't be a negative value")];
-    }
-    className(): string {
-        return this.constructor.name;
-    }
-}
-class Stocks extends DomainObjects<Stock, Stocks> {
-    validations(): DomainValidation<Stocks>[] {
-        return [
-            this.check(() => this.elements.length < 5)
-                .orElse("size must not exceed 4")];
-    }
-    static of(elements: Stock[]): Stocks {
-        return new Stocks(elements)
-    }
-    deepCopy(): Stocks {
-        return new Stocks(this.deepCopies());
-    }
-    className(): string {
-        return this.constructor.name;
-    }
-    get(index: number) {
-        return this.elements[index];
-    }
-
-}
 test("deepcopy", () => {
     const sut: Stocks = Stocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]);
     const actual = sut.deepCopy();
@@ -54,12 +9,25 @@ test("deepcopy", () => {
     expect(actual.get(1)).toStrictEqual(sut.get(1))
     expect(actual.get(1)).not.toBe(sut.get(1));
 });
-
-test("equalTo", () => {
-    const sut: Stocks = Stocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]);
-    const actual = sut.equalTo(Stocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]));
-    expect(actual).toBeTruthy();
-});
+describe(
+    "equalTo",
+    () => {
+        test("equivalent", () => {
+            const sut: Stocks = Stocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]);
+            const actual = sut.equalTo(Stocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]));
+            expect(actual).toBeTruthy();
+        });
+        test("not equivalent", () => {
+            const sut: Stocks = Stocks.of([Stock.of(15), Stock.of(0)]);
+            const actual = sut.equalTo(AnotherStocks.of([Stock.of(15), Stock.of(Number.MAX_VALUE)]));
+            expect(actual).toBeFalsy();
+        });
+        test("empty", () => {
+            const sut: Stocks = Stocks.of([]);
+            const actual = sut.equalTo(Stocks.of([]));
+            expect(actual).toBeTruthy();
+        });
+    })
 
 test("className", () => {
     const sut: Stocks = new Stocks([]);

@@ -1,4 +1,4 @@
-import { notNull } from "../../Functions";
+import { notNull } from "toolbox-ts";
 import { DomainConstraintViolation, DomainObject } from "../DomainObject";
 
 export abstract class DomainPrimitive<P extends DomainPrimitive<P, V>, V extends (string | number | bigint | boolean | symbol)> extends DomainObject<P> {
