@@ -2,13 +2,15 @@
   "name": "ez-clean-kit",
   "version": "0.1.2",
   "description": "Easily implemented kit for starting up clean application",
-  "main": "index.ts",
+  "main": "dist-cjs/index.js",
+  "module": "dist-esm/index.js",
   "scripts": {
     "watch": "tsc-watch",
     "test": "jest",
     "test-coverage": "jest --coverage",
     "dev": "webpack --mode development --watch",
-    "build": "webpack --mode production",
+    "build:webpack": "webpack --mode production",
+    "build": "npm-run-all -s build:cjs build:esm",
     "build:cjs": "tsc --project . --module commonjs --outDir ./dist-cjs",
     "build:esm": "tsc --project . --module es2015 --outDir ./dist-esm"
   },
