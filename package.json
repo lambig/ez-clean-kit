@@ -1,6 +1,6 @@
 {
   "name": "ez-clean-kit",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Easily implemented kit for starting up clean application",
   "main": "index.ts",
   "module": "index.ts",
