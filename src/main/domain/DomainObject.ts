@@ -33,17 +33,19 @@ export abstract class DomainObject<D extends DomainObject<D>> {
      */
     abstract className(): string;
 }
+export type Constraint<D extends DomainObject<D>> = () => boolean;
+export type ViolationDescriptor<D extends DomainObject<D>> = () => DomainConstraintViolation;
 
 /**
  * a pair of constraint on a domain object / violation descriptor
  */
 export class DomainValidation<E extends DomainObject<E>> {
+    private readonly constraint: Constraint<E>;
+    private readonly violationDescriptor: ViolationDescriptor<E>;
     constructor(constraint: Constraint<E>, violationDescriptor: ViolationDescriptor<E>) {
         this.constraint = constraint;
         this.violationDescriptor = violationDescriptor;
     }
-    private readonly constraint: Constraint<E>;
-    private readonly violationDescriptor: ViolationDescriptor<E>;
 
     /**
      * @returns description of violation or null
@@ -53,15 +55,11 @@ export class DomainValidation<E extends DomainObject<E>> {
     }
 }
 
-
-type Constraint<D extends DomainObject<D>> = () => boolean;
-type ViolationDescriptor<D extends DomainObject<D>> = () => DomainConstraintViolation;
-
 export class PartialApplication<D extends DomainObject<D>> {
+    private readonly constraint: Constraint<D>;
     constructor(constraint: Constraint<D>) {
         this.constraint = constraint;
     }
-    private readonly constraint: Constraint<D>;
     orElse(violationDescriptor: ViolationDescriptor<D>): DomainValidation<D>;
     orElse(description: string): DomainValidation<D>;
     /**
@@ -95,7 +93,7 @@ export abstract class DomainConstraintViolation {
     }
 }
 
-class StringViolationMessage extends DomainConstraintViolation {
+export class StringViolationMessage extends DomainConstraintViolation {
     constructor(message: string) {
         super();
         this.message = message;
