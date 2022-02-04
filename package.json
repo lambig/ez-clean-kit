@@ -2,7 +2,7 @@
   "name": "ez-clean-kit",
   "version": "0.1.1",
   "description": "Easily implemented kit for starting up clean application",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "watch": "tsc-watch",
     "test": "jest",
