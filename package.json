@@ -1,9 +1,9 @@
 {
   "name": "ez-clean-kit",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Easily implemented kit for starting up clean application",
-  "main": "index.ts",
-  "module": "index.ts",
+  "main": "dist-cjs/index.js",
+  "module": "dist-esm/index.js",
   "scripts": {
     "watch": "tsc-watch",
     "test": "jest",
@@ -13,7 +13,10 @@
     "test:webpack": "node scripts/verify-webpack.cjs",
     "build": "npm-run-all -s build:cjs build:esm",
     "build:cjs": "tsc --project . --module commonjs --outDir ./dist-cjs",
-    "build:esm": "tsc --project . --module es2015 --outDir ./dist-esm"
+    "build:esm": "tsc --project . --module es2015 --outDir ./dist-esm && node scripts/finalize-esm.cjs",
+    "test:package": "node scripts/verify-package.cjs",
+    "prepack": "npm run clean:build && npm run build && npm run build:webpack && npm run test:webpack",
+    "clean:build": "node scripts/clean-build.cjs"
   },
   "repository": {
     "type": "git",
@@ -31,7 +34,6 @@
     "jest": "27.4.3",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.2",
-    "toolbox-ts": "0.2.0",
     "ts-jest": "27.0.7",
     "ts-loader": "^9.2.6",
     "ts-node": "10.4.0",
@@ -60,5 +62,20 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/test/example/"
     ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "types": "dist-cjs/index.d.ts",
+  "files": [
+    "dist-cjs/",
+    "dist-esm/",
+    "dist/",
+    "index.ts",
+    "src/main/"
+  ],
+  "dependencies": {
+    "toolbox-ts": "0.2.0"
   }
 }
