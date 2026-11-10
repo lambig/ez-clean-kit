@@ -15,10 +15,16 @@ function check(api) {
 const pkg = require('ez-clean-kit/package.json');
 assert.equal(pkg.dependencies['toolbox-ts'], '0.2.0');
 assert.equal(require('toolbox-ts/package.json').version, '0.2.0');
-check(require('ez-clean-kit'));
+const cjs = require('ez-clean-kit');
+check(cjs);
 check(require('ez-clean-kit/dist/index.js'));
 const root = path.dirname(require.resolve('ez-clean-kit/package.json'));
-import(pathToFileURL(path.join(root, pkg.module)).href).then(api => {
-    check(api);
-    console.log('Installed ez-clean-kit: CommonJS, ESM, webpack and runtime dependency passed.');
+Promise.all([
+    import('ez-clean-kit'),
+    import(pathToFileURL(path.join(root, pkg.module)).href)
+]).then(([nodeImport, esmFile]) => {
+    assert.strictEqual(nodeImport.default, cjs, 'Node bare import must expose the CommonJS API');
+    check(nodeImport.default);
+    check(esmFile);
+    console.log('Installed ez-clean-kit: require, Node bare import via CommonJS, and explicit ESM file passed.');
 }).catch(error => { console.error(error); process.exitCode = 1; });

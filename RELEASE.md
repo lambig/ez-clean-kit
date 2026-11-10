@@ -3,7 +3,9 @@
 This repository validates the actual npm tarball in Node CI. The verification
 installs it in a separate consumer project without development dependencies,
 then checks its public entry points. TypeScript packages also verify declarations
-and the declared ESM entry. `npm run test:package` prints the candidate tarball
+and the ESM file declared by the bundler-oriented `module` field. Node bare
+imports use the CommonJS `main` entry and are checked separately through their
+default export. See README for this contract. `npm run test:package` prints the candidate tarball
 path, integrity and file list.
 
 ## Prepare the candidate
@@ -13,9 +15,18 @@ path, integrity and file list.
    release and update `.nvmrc` before the final release validation. A package
    does not embed the Node executable; republishing alone does not patch a
    consumer's Node runtime.
-3. Check `npm view <package-name> version dist-tags --json` through the existing
-   npm security proxy. Choose an unused version and update package.json and
-   package-lock.json together. The current version is a release candidate.
+3. Check the exact candidate against the official registry immediately before
+   publication (replace 0.1.6 with the final candidate):
+   `npm view ez-clean-kit@0.1.6 version --registry=https://registry.npmjs.org/`.
+   Also retrieve the full history with
+   `npm view ez-clean-kit versions --json --registry=https://registry.npmjs.org/`.
+   Stop if the candidate exists under any tag or in that history. Proceed only
+   when the package history lookup succeeds and excludes the candidate, and
+   the exact lookup reports no matching version. Authentication, network and
+   other lookup failures are not evidence that a version is unused. A version
+   previously published and then unpublished must not be reused either.
+   Update package.json and package-lock.json together. The current version is
+   a release candidate; latest/dist-tags alone cannot establish availability.
 4. Run `npm ci --registry=https://npm.flatt.tech/ --no-audit --no-fund`, the
    repository tests, and `npm run test:package`. Inspect the reported tarball
    file list and integrity. Confirm the same commit's Node CI succeeds.
