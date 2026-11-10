@@ -17,7 +17,8 @@ module.exports = {
         ]
     },
     output: {
-        filename: 'index.ts',
-        path: path.join(__dirname, 'dist')
+        filename: 'index.js',
+        path: path.join(__dirname, 'dist'),
+        library: { type: 'commonjs2' }
     }
 };

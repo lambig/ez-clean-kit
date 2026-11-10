@@ -39,3 +39,5 @@ jobs:
         run: npm run build
       - name: Build webpack bundle
         run: npm run build:webpack
+      - name: Verify webpack consumer entry
+        run: npm run test:webpack
