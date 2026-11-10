@@ -5,7 +5,7 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js'],
     },
-    entry: './src/main/index.ts',
+    entry: './index.ts',
     module: {
         rules: [
             {
