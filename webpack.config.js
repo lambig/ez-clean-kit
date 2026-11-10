@@ -5,7 +5,7 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js'],
     },
-    entry: './src/main/index.ts',
+    entry: './index.ts',
     module: {
         rules: [
             {
@@ -17,7 +17,8 @@ module.exports = {
         ]
     },
     output: {
-        filename: 'index.ts',
-        path: path.join(__dirname, 'dist')
+        filename: 'index.js',
+        path: path.join(__dirname, 'dist'),
+        library: { type: 'commonjs2' }
     }
 };
