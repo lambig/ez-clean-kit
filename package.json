@@ -29,18 +29,18 @@
   },
   "homepage": "https://github.com/lambig/ez-clean-kit#readme",
   "devDependencies": {
-    "@types/jest": "27.0.3",
+    "@types/jest": "29.5.14",
     "@types/node": "16.11.11",
-    "jest": "27.4.3",
+    "jest": "29.7.0",
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.2",
-    "ts-jest": "27.0.7",
+    "ts-jest": "29.4.15",
     "ts-loader": "^9.2.6",
     "ts-node": "10.4.0",
     "ts-node-dev": "1.1.8",
     "tsc-watch": "4.5.0",
-    "typescript": "4.5.2",
-    "webpack": "5.76.0",
+    "typescript": "5.9.3",
+    "webpack": "5.112.2",
     "webpack-cli": "4.9.2"
   },
   "jest": {
@@ -49,12 +49,12 @@
       "js"
     ],
     "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.json"
+        }
+      ]
     },
     "testMatch": [
       "**/test/**/*.test.ts"
